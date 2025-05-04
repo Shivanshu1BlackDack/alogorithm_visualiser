@@ -314,7 +314,7 @@ public:
 
         font.loadFromFile("arial.ttf");
         restartButton.setSize({ 150, 35 });
-        restartButton.setFillColor(sf::Color(0, 150, 0));
+        restartButton.setFillColor(sf::Color::Blue);
         restartButton.setPosition(700, 20);
 
         restartButtonText.setFont(font);
@@ -481,31 +481,31 @@ public:
     FordFulkersonVisualizer() {
         font.loadFromFile("arial.ttf");
 
-        button.setSize(sf::Vector2f(180, 40));
+        button.setSize(sf::Vector2f(180, 35));
         button.setFillColor(sf::Color::Green);
-        button.setPosition(600, 20);
+        button.setPosition(600, 35);
 
         buttonText.setFont(font);
         buttonText.setString("Find Max Flow");
         buttonText.setCharacterSize(18);
         buttonText.setFillColor(sf::Color::White);
-        buttonText.setPosition(610, 30);
+        buttonText.setPosition(610, 40);
 
         instructionText.setFont(font);
-        instructionText.setCharacterSize(16);
-        instructionText.setFillColor(sf::Color::White);
+        instructionText.setCharacterSize(20);
+        instructionText.setFillColor(sf::Color::Yellow);
         instructionText.setPosition(20, 10);
-        instructionText.setString("Click to add nodes. Type edges as: from to capacity");
+        instructionText.setString("Click to add nodes. Type edges as: from to capacity.");
 
         inputPrompt.setFont(font);
-        inputPrompt.setCharacterSize(16);
+        inputPrompt.setCharacterSize(20);
         inputPrompt.setFillColor(sf::Color::Yellow);
         inputPrompt.setPosition(20, 520);
         inputPrompt.setString("Edge Input (e.g. 0 1 10):");
 
         inputText.setFont(font);
-        inputText.setCharacterSize(16);
-        inputText.setFillColor(sf::Color::Cyan);
+        inputText.setCharacterSize(20);
+        inputText.setFillColor(sf::Color::White);
         inputText.setPosition(250, 520);
 
         maxFlowText.setFont(font);
@@ -515,27 +515,27 @@ public:
 
         exitButton.setSize({ 150, 35 });
         exitButton.setFillColor(sf::Color(150, 0, 0));
-        exitButton.setPosition(650, 70);
+        exitButton.setPosition(830,35);
 
         exitButtonText.setFont(font);
         exitButtonText.setCharacterSize(18);
         exitButtonText.setFillColor(sf::Color::White);
         exitButtonText.setString("Exit");
-        exitButtonText.setPosition(680, 75);
+        exitButtonText.setPosition(850, 40);
 
         walker.setRadius(8);
         walker.setFillColor(sf::Color::Cyan);
         walker.setOrigin(8, 8);
         //new constructor element is added
         restartButton.setSize({ 150, 35 });
-        restartButton.setFillColor(sf::Color::Magenta);
-        restartButton.setPosition(420, 20);
+        restartButton.setFillColor(sf::Color::Blue);
+        restartButton.setPosition(420, 35);
 
         restartButtonText.setFont(font);
         restartButtonText.setCharacterSize(18);
         restartButtonText.setFillColor(sf::Color::White);
         restartButtonText.setString("Restart");
-        restartButtonText.setPosition(500, 25);
+        restartButtonText.setPosition(480, 40);
     }
 
     //new code added
@@ -834,36 +834,36 @@ public:
     PrimsVisualizer() {
         font.loadFromFile("arial.ttf");
 
-        button.setSize(sf::Vector2f(200, 40));
-        button.setFillColor(sf::Color::Green);
-        button.setPosition(580, 20);
+        button.setSize(sf::Vector2f(200, 35));
+        button.setFillColor(sf::Color(0,100,0));
+        button.setPosition(830, 20);
 
         buttonText.setFont(font);
         buttonText.setString("Run Prim's Algorithm");
-        buttonText.setCharacterSize(16);
+        buttonText.setCharacterSize(17);
         buttonText.setFillColor(sf::Color::White);
-        buttonText.setPosition(590, 28);
+        buttonText.setPosition(840, 28);
 
         instructionText.setFont(font);
-        instructionText.setCharacterSize(14);
-        instructionText.setFillColor(sf::Color::White);
+        instructionText.setCharacterSize(20);
+        instructionText.setFillColor(sf::Color::Yellow);
         instructionText.setPosition(20, 10);
         instructionText.setString("Click to add nodes. Type edges like: 0 1 10 and press Enter.");
 
         inputPrompt.setFont(font);
-        inputPrompt.setCharacterSize(14);
+        inputPrompt.setCharacterSize(20);
         inputPrompt.setFillColor(sf::Color::Yellow);
         inputPrompt.setPosition(20, 520);
         inputPrompt.setString("Edge Input (format: from to weight):");
 
         inputText.setFont(font);
-        inputText.setCharacterSize(14);
-        inputText.setFillColor(sf::Color::Cyan);
-        inputText.setPosition(250, 520);
+        inputText.setCharacterSize(20);
+        inputText.setFillColor(sf::Color::White);
+        inputText.setPosition(350, 520);
 
         mstWeightText.setFont(font);
         mstWeightText.setCharacterSize(18);
-        mstWeightText.setFillColor(sf::Color::Cyan);
+        mstWeightText.setFillColor(sf::Color::Red);
         mstWeightText.setPosition(20, 550);
 
         statusText.setFont(font);
@@ -872,25 +872,25 @@ public:
         statusText.setPosition(20, 480);
         statusText.setString("");
 
-        exitButton.setSize({ 150, 35 });
-        exitButton.setFillColor(sf::Color(150, 0, 0));
-        exitButton.setPosition(650, 70);
+        exitButton.setSize({ 100, 35 });
+        exitButton.setFillColor(sf::Color::Red);
+        exitButton.setPosition(1050, 20);
 
         exitButtonText.setFont(font);
         exitButtonText.setCharacterSize(18);
         exitButtonText.setFillColor(sf::Color::White);
         exitButtonText.setString("Exit");
-        exitButtonText.setPosition(680, 75);
+        exitButtonText.setPosition(1060, 25);
 
-        restartButton.setSize({ 150, 35 });
-        restartButton.setFillColor(sf::Color(0, 150, 0));
-        restartButton.setPosition(420, 20);
+        restartButton.setSize({ 100, 35 });
+        restartButton.setFillColor(sf::Color::Blue);
+        restartButton.setPosition(700, 20);
 
         restartButtonText.setFont(font);
         restartButtonText.setCharacterSize(18);
         restartButtonText.setFillColor(sf::Color::White);
         restartButtonText.setString("Restart");
-        restartButtonText.setPosition(500, 25);
+        restartButtonText.setPosition(730, 25);
     }
 
     void reset() {
