@@ -8,7 +8,10 @@
 #include <algorithm>
 #include <sstream>
 #include <thread>
+#include<functional>
 #include <chrono>
+using namespace std;
+using namespace sf;
 
 // -- ENUM FOR APP STATE --
 enum AppState { MENU, VIEW1, VIEW2, VIEW3, VIEW4 };
@@ -23,24 +26,24 @@ struct Edge {
 
 class InputBox {
 public:
-    sf::RectangleShape box;
-    sf::Text inputText;
-    sf::Font font;
-    std::string content;
+    RectangleShape box;
+    Text inputText;
+    Font font;
+    string content;
 
     InputBox() {
         font.loadFromFile("arial.ttf");
-        box.setSize(sf::Vector2f(300, 30));
-        box.setFillColor(sf::Color(200, 200, 200));
+        box.setSize(Vector2f(300, 30));
+        box.setFillColor(Color(200, 200, 200));
         box.setPosition(20, 20);
 
         inputText.setFont(font);
         inputText.setCharacterSize(18);
-        inputText.setFillColor(sf::Color::Black);
+        inputText.setFillColor(Color::Black);
         inputText.setPosition(25, 25);
     }
 
-    void draw(sf::RenderWindow& window) {
+    void draw(RenderWindow& window) {
         window.draw(box);
         inputText.setString(content);
         window.draw(inputText);
@@ -59,30 +62,30 @@ public:
 };
 
 class Graph {
-    sf::RectangleShape exitButton;
-    sf::Text exitButtonText;
-    sf::RectangleShape restartButton;
-    sf::Text restartButtonText;
+    RectangleShape exitButton;
+    Text exitButtonText;
+    RectangleShape restartButton;
+    Text restartButtonText;
 private:
     struct Node {
-        sf::Vector2f position;
-        sf::CircleShape shape;
-        sf::Text label;
+        Vector2f position;
+        CircleShape shape;
+        Text label;
     };
 
-    std::vector<Node> nodes;
-    std::vector<Edge> edges;
-    std::vector<sf::Text> edgeLabels;
-    std::vector<sf::Vertex> pathLines;
-    std::vector<int> shortestPath;
+    vector<Node> nodes;
+    vector<Edge> edges;
+    vector<Text> edgeLabels;
+    vector<Vertex> pathLines;
+    vector<int> shortestPath;
     size_t animationIndex = 0;
     bool animatePath = false;
 
-    sf::CircleShape walker;
-    sf::Font font;
-    sf::Text instruction;
-    sf::RectangleShape button;
-    sf::Text buttonText;
+   CircleShape walker;
+   Font font;
+   Text instruction;
+   RectangleShape button;
+   Text buttonText;
 
 public:
     Graph() {
@@ -90,42 +93,42 @@ public:
 
         instruction.setFont(font);
         instruction.setCharacterSize(16);
-        instruction.setFillColor(sf::Color::White);
+        instruction.setFillColor(Color::White);
         instruction.setPosition(20, 60);
         instruction.setString("Click to add nodes. Type edges as: from to weight");
 
         button.setSize({ 200, 40 });
         button.setPosition(20, 520);
-        button.setFillColor(sf::Color::White);
+        button.setFillColor(Color::White);
 
         buttonText.setFont(font);
         buttonText.setCharacterSize(18);
-        buttonText.setFillColor(sf::Color::Black);
+        buttonText.setFillColor(Color::Black);
         buttonText.setString("Find Shortest Path");
         buttonText.setPosition(30, 528);
 
         exitButton.setSize({ 150, 35 });
-        exitButton.setFillColor(sf::Color(150, 0, 0));
+        exitButton.setFillColor(Color(150, 0, 0));
         exitButton.setPosition(650, 20);
 
         exitButtonText.setFont(font);
         exitButtonText.setCharacterSize(18);
-        exitButtonText.setFillColor(sf::Color::White);
+        exitButtonText.setFillColor(Color::White);
         exitButtonText.setString("Exit");
         exitButtonText.setPosition(680, 25);
 
 
         walker.setRadius(8.f);
-        walker.setFillColor(sf::Color::Yellow);
+        walker.setFillColor(Color::Yellow);
         walker.setOrigin(8.f, 8.f);
         //new code added
         restartButton.setSize({ 150, 35 });
-        restartButton.setFillColor(sf::Color(0, 150, 0));
+        restartButton.setFillColor(Color(0, 150, 0));
         restartButton.setPosition(470, 20);
 
         restartButtonText.setFont(font);
         restartButtonText.setCharacterSize(18);
-        restartButtonText.setFillColor(sf::Color::White);
+        restartButtonText.setFillColor(Color::White);
         restartButtonText.setString("Restart");
         restartButtonText.setPosition(500, 25);
     }
@@ -138,21 +141,21 @@ public:
         animationIndex = 0;
         animatePath = false;
     }
-    bool isRestartButtonClicked(sf::Vector2f pos) {
+    bool isRestartButtonClicked(Vector2f pos) {
         return restartButton.getGlobalBounds().contains(pos);
     }
-    void draw(sf::RenderWindow& window) {
+    void draw(RenderWindow& window) {
         for (size_t i = 0; i < edges.size(); i++) {
-            sf::Vertex line[] = {
-                sf::Vertex(nodes[edges[i].from].position, sf::Color::White),
-                sf::Vertex(nodes[edges[i].to].position, sf::Color::White)
+            Vertex line[] = {
+                Vertex(nodes[edges[i].from].position, Color::White),
+                Vertex(nodes[edges[i].to].position,Color::White)
             };
-            window.draw(line, 2, sf::Lines);
+            window.draw(line, 2, Lines);
             window.draw(edgeLabels[i]);
         }
 
         if (!pathLines.empty())
-            window.draw(&pathLines[0], pathLines.size(), sf::Lines);
+            window.draw(&pathLines[0], pathLines.size(),Lines);
 
         for (auto& node : nodes) {
             window.draw(node.shape);
@@ -172,43 +175,43 @@ public:
 
     }
 
-    void addNode(sf::Vector2f pos) {
+    void addNode(Vector2f pos) {
         Node node;
         node.position = pos;
         node.shape.setRadius(10);
-        node.shape.setFillColor(sf::Color::Blue);
-        node.shape.setPosition(pos - sf::Vector2f(10, 10));
+        node.shape.setFillColor(Color::Blue);
+        node.shape.setPosition(pos - Vector2f(10, 10));
 
         node.label.setFont(font);
         node.label.setCharacterSize(15);
-        node.label.setFillColor(sf::Color::White);
-        node.label.setString(std::to_string(nodes.size()));
+        node.label.setFillColor(Color::White);
+        node.label.setString(to_string(nodes.size()));
         node.label.setPosition(pos.x - 5, pos.y - 20);
 
         nodes.push_back(node);
     }
 
-    void addEdgeFromText(const std::string& str) {
-        std::istringstream iss(str);
+    void addEdgeFromText(const string& str) {
+        istringstream iss(str);
         int u, v;
         float w;
         if (iss >> u >> v >> w) {
             edges.push_back({ u, v, w });
             edges.push_back({ v, u, w });
 
-            sf::Text label;
+            Text label;
             label.setFont(font);
             label.setCharacterSize(15);
-            label.setFillColor(sf::Color::Red);
-            sf::Vector2f mid = (nodes[u].position + nodes[v].position) / 2.f;
+            label.setFillColor(Color::Red);
+            Vector2f mid = (nodes[u].position + nodes[v].position) / 2.f;
             label.setPosition(mid);
-            label.setString(std::to_string(static_cast<int>(w)));
+            label.setString(to_string(static_cast<int>(w)));
             edgeLabels.push_back(label);
             edgeLabels.push_back(label);
         }
     }
 
-    void handleClick(sf::Vector2f pos) {
+    void handleClick(Vector2f pos) {
         if (button.getGlobalBounds().contains(pos)) {
             findShortestPath(0, nodes.size() - 1);
             animatePath = true;
@@ -223,10 +226,10 @@ public:
 
     void update() {
         if (animatePath && animationIndex < shortestPath.size() - 1) {
-            sf::Vector2f current = walker.getPosition();
-            sf::Vector2f target = nodes[shortestPath[animationIndex + 1]].position;
-            sf::Vector2f dir = target - current;
-            float dist = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+            Vector2f current = walker.getPosition();
+            Vector2f target = nodes[shortestPath[animationIndex + 1]].position;
+            Vector2f dir = target - current;
+            float dist = sqrt(dir.x * dir.x + dir.y * dir.y);
             if (dist > 1.5f) {
                 dir /= dist;
                 walker.move(dir * 2.f);
@@ -240,11 +243,11 @@ public:
 
     void findShortestPath(int start, int end) {
         int n = nodes.size();
-        std::vector<float> dist(n, std::numeric_limits<float>::max());
-        std::vector<int> parent(n, -1);
+        vector<float> dist(n, numeric_limits<float>::max());
+        vector<int> parent(n, -1);
         dist[start] = 0;
-        using P = std::pair<float, int>;
-        std::priority_queue<P, std::vector<P>, std::greater<P>> pq;
+        using P = pair<float, int>;
+        priority_queue<P, vector<P>, greater<P>> pq;
         pq.push({ 0, start });
 
         while (!pq.empty()) {
@@ -268,15 +271,15 @@ public:
         shortestPath.clear();
         for (int v = end; v != -1; v = parent[v])
             shortestPath.push_back(v);
-        std::reverse(shortestPath.begin(), shortestPath.end());
+        reverse(shortestPath.begin(), shortestPath.end());
 
         pathLines.clear();
         for (size_t i = 1; i < shortestPath.size(); ++i) {
-            pathLines.push_back(sf::Vertex(nodes[shortestPath[i - 1]].position, sf::Color::Cyan));
-            pathLines.push_back(sf::Vertex(nodes[shortestPath[i]].position, sf::Color::Cyan));
+            pathLines.push_back(Vertex(nodes[shortestPath[i - 1]].position, Color::Cyan));
+            pathLines.push_back(Vertex(nodes[shortestPath[i]].position, Color::Cyan));
         }
     }
-    bool isExitButtonClicked(sf::Vector2f pos) {
+    bool isExitButtonClicked(Vector2f pos) {
         return exitButton.getGlobalBounds().contains(pos);
     }
 };
@@ -296,30 +299,30 @@ private:
     const int rows = 50;
     const int cols = 80;
     const int cellSize = 30;
-    std::vector<std::vector<Cell>> grid;
+    vector<vector<Cell>> grid;
     Cell* start = nullptr;
     Cell* end = nullptr;
     bool running = false;
     bool pathFound = false;
     //new member variable for reset buuton
-    sf::RectangleShape restartButton;
-    sf::Text restartButtonText;
-    sf::Font font;
+    RectangleShape restartButton;
+    Text restartButtonText;
+    Font font;
 public:
     AStarVisualizer() {
-        grid.resize(rows, std::vector<Cell>(cols));
+        grid.resize(rows, vector<Cell>(cols));
         for (int r = 0; r < rows; ++r)
             for (int c = 0; c < cols; ++c)
                 grid[r][c] = { r, c };
 
         font.loadFromFile("arial.ttf");
         restartButton.setSize({ 150, 35 });
-        restartButton.setFillColor(sf::Color::Blue);
+        restartButton.setFillColor(Color::Blue);
         restartButton.setPosition(700, 20);
 
         restartButtonText.setFont(font);
         restartButtonText.setCharacterSize(18);
-        restartButtonText.setFillColor(sf::Color::White);
+        restartButtonText.setFillColor(Color::White);
         restartButtonText.setString("Restart");
         restartButtonText.setPosition(730, 25);
     }
@@ -336,23 +339,23 @@ public:
         pathFound = false;
     }
 
-    bool isRestartButtonClicked(sf::Vector2f pos) {
+    bool isRestartButtonClicked(Vector2f pos) {
         return restartButton.getGlobalBounds().contains(pos);
     }
 
-    void draw(sf::RenderWindow& window) {
+    void draw(RenderWindow& window) {
         for (int r = 0; r < rows; ++r) {
             for (int c = 0; c < cols; ++c) {
                 Cell& cell = grid[r][c];
-                sf::RectangleShape rect(sf::Vector2f(cellSize - 1, cellSize - 1));
+                RectangleShape rect(Vector2f(cellSize - 1, cellSize - 1));
                 rect.setPosition(c * cellSize, r * cellSize);
 
-                if (&cell == start) rect.setFillColor(sf::Color::Green);
-                else if (&cell == end) rect.setFillColor(sf::Color::Red);
-                else if (cell.isWall) rect.setFillColor(sf::Color(50, 50, 50));
-                else if (cell.isPath) rect.setFillColor(sf::Color::Yellow);
-                else if (cell.isVisited) rect.setFillColor(sf::Color(100, 100, 255));
-                else rect.setFillColor(sf::Color::White);
+                if (&cell == start) rect.setFillColor(Color::Green);
+                else if (&cell == end) rect.setFillColor(Color::Red);
+                else if (cell.isWall) rect.setFillColor(Color(50, 50, 50));
+                else if (cell.isPath) rect.setFillColor(Color::Yellow);
+                else if (cell.isVisited) rect.setFillColor(Color(100, 100, 255));
+                else rect.setFillColor(Color::White);
 
                 window.draw(rect);
             }
@@ -361,17 +364,17 @@ public:
         window.draw(restartButtonText);
     }
 
-    void handleClick(sf::Vector2f pos) {
+    void handleClick(Vector2f pos) {
         int row = pos.y / cellSize;
         int col = pos.x / cellSize;
         if (row >= 0 && row < rows && col >= 0 && col < cols) {
             Cell* clicked = &grid[row][col];
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (Mouse::isButtonPressed(Mouse::Left)) {
                 if (!start) start = clicked;
                 else if (!end && clicked != start) end = clicked;
                 else if (clicked != start && clicked != end) clicked->isWall = !clicked->isWall;
             }
-            else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+            else if (Mouse::isButtonPressed(Mouse::Right)) {
                 if (clicked == start) start = nullptr;
                 if (clicked == end) end = nullptr;
                 clicked->isWall = false;
@@ -386,7 +389,7 @@ public:
             bool operator>(const Node& other) const { return f > other.f; }
         };
 
-        std::priority_queue<Node, std::vector<Node>, std::greater<Node>> openSet;
+        priority_queue<Node, vector<Node>, greater<Node>> openSet;
         start->g = 0;
         start->h = heuristic(start, end);
         openSet.push({ start, start->h });
@@ -421,11 +424,11 @@ public:
 
 private:
     float heuristic(Cell* a, Cell* b) {
-        return std::abs(a->row - b->row) + std::abs(a->col - b->col); // Manhattan distance
+        return abs(a->row - b->row) + abs(a->col - b->col); // Manhattan distance
     }
 
-    std::vector<Cell*> neighbors(Cell* cell) {
-        std::vector<Cell*> result;
+    vector<Cell*> neighbors(Cell* cell) {
+        vector<Cell*> result;
 
         int dr[] = { -1, 1, 0, 0 };
         int dc[] = { 0, 0, -1, 1 };
@@ -443,97 +446,97 @@ private:
 
 // -- FORD FULKERSON IMPLEMENTATION --
 class FordFulkersonVisualizer {
-    sf::RectangleShape restartButton;
-    sf::Text restartButtonText;
+    RectangleShape restartButton;
+    Text restartButtonText;
 
 private:
     struct Node {
-        sf::Vector2f position;
-        sf::CircleShape shape;
-        sf::Text label;
+        Vector2f position;
+        CircleShape shape;
+        Text label;
     };
 
-    std::vector<Node> nodes;
-    std::vector<Edge> edges;
-    sf::Font font;
+    vector<Node> nodes;
+    vector<Edge> edges;
+    Font font;
 
-    sf::RectangleShape button;
-    sf::Text buttonText;
-    sf::Text instructionText;
-    sf::Text maxFlowText;
-    sf::Text inputPrompt;
-    sf::Text inputText;
-    sf::RectangleShape exitButton;
-    sf::Text exitButtonText;
+    RectangleShape button;
+    Text buttonText;
+    Text instructionText;
+    Text maxFlowText;
+    Text inputPrompt;
+    Text inputText;
+    RectangleShape exitButton;
+    Text exitButtonText;
 
-    std::string userInput;
+    string userInput;
 
     bool animating = false;
-    std::vector<int> currentPath;
+    vector<int> currentPath;
     size_t animationIndex = 0;
-    sf::CircleShape walker;
+    CircleShape walker;
 
     float totalFlow = 0;
 
-    sf::RenderWindow* renderWindow = nullptr; // For animation
+    RenderWindow* renderWindow = nullptr; // For animation
 
 public:
     FordFulkersonVisualizer() {
         font.loadFromFile("arial.ttf");
 
-        button.setSize(sf::Vector2f(180, 35));
-        button.setFillColor(sf::Color::Green);
+        button.setSize(Vector2f(180, 35));
+        button.setFillColor(Color::Green);
         button.setPosition(600, 35);
 
         buttonText.setFont(font);
         buttonText.setString("Find Max Flow");
         buttonText.setCharacterSize(18);
-        buttonText.setFillColor(sf::Color::White);
+        buttonText.setFillColor(Color::White);
         buttonText.setPosition(610, 40);
 
         instructionText.setFont(font);
         instructionText.setCharacterSize(20);
-        instructionText.setFillColor(sf::Color::Yellow);
+        instructionText.setFillColor(Color::Yellow);
         instructionText.setPosition(20, 10);
         instructionText.setString("Click to add nodes. Type edges as: from to capacity.");
 
         inputPrompt.setFont(font);
         inputPrompt.setCharacterSize(20);
-        inputPrompt.setFillColor(sf::Color::Yellow);
+        inputPrompt.setFillColor(Color::Yellow);
         inputPrompt.setPosition(20, 520);
         inputPrompt.setString("Edge Input (e.g. 0 1 10):");
 
         inputText.setFont(font);
         inputText.setCharacterSize(20);
-        inputText.setFillColor(sf::Color::White);
+        inputText.setFillColor(Color::White);
         inputText.setPosition(250, 520);
 
         maxFlowText.setFont(font);
         maxFlowText.setCharacterSize(20);
-        maxFlowText.setFillColor(sf::Color::White);
+        maxFlowText.setFillColor(Color::White);
         maxFlowText.setPosition(20, 550);
 
         exitButton.setSize({ 150, 35 });
-        exitButton.setFillColor(sf::Color(150, 0, 0));
+        exitButton.setFillColor(Color(150, 0, 0));
         exitButton.setPosition(830,35);
 
         exitButtonText.setFont(font);
         exitButtonText.setCharacterSize(18);
-        exitButtonText.setFillColor(sf::Color::White);
+        exitButtonText.setFillColor(Color::White);
         exitButtonText.setString("Exit");
         exitButtonText.setPosition(850, 40);
 
         walker.setRadius(8);
-        walker.setFillColor(sf::Color::Cyan);
+        walker.setFillColor(Color::Cyan);
         walker.setOrigin(8, 8);
         //new constructor element is added
         restartButton.setSize({ 150, 35 });
-        restartButton.setFillColor(sf::Color::Blue);
+        restartButton.setFillColor(Color::Blue);
         restartButton.setPosition(420, 35);
 
         restartButtonText.setFont(font);
         restartButtonText.setCharacterSize(18);
-        restartButtonText.setFillColor(sf::Color::White);
+        restartButtonText.setFillColor(Color::White);
         restartButtonText.setString("Restart");
         restartButtonText.setPosition(480, 40);
     }
@@ -550,7 +553,7 @@ public:
         maxFlowText.setString("");
     }
 
-    void setRenderWindow(sf::RenderWindow& win) {
+    void setRenderWindow(RenderWindow& win) {
         renderWindow = &win;
     }
 
@@ -558,11 +561,11 @@ public:
         return animating;
     }
 
-    bool isExitButtonClicked(sf::Vector2f pos) {
+    bool isExitButtonClicked(Vector2f pos) {
         return exitButton.getGlobalBounds().contains(pos);
     }
 
-    void handleClick(sf::Vector2f pos) {
+    void handleClick(Vector2f pos) {
         if (button.getGlobalBounds().contains(pos)) {
             if (!animating)
                 startMaxFlow();
@@ -577,15 +580,15 @@ public:
     }
 
     void addNode(float x, float y) {
-        sf::CircleShape circle(15);
-        circle.setFillColor(sf::Color::Blue);
+        CircleShape circle(15);
+        circle.setFillColor(Color::Blue);
         circle.setPosition(x - 15, y - 15);
 
-        sf::Text label;
+        Text label;
         label.setFont(font);
-        label.setString(std::to_string(nodes.size()));
+        label.setString(to_string(nodes.size()));
         label.setCharacterSize(14);
-        label.setFillColor(sf::Color::White);
+        label.setFillColor(Color::White);
         label.setPosition(x - 5, y - 30);
 
         nodes.push_back({ {x, y}, circle, label });
@@ -598,7 +601,7 @@ public:
         }
     }
 
-    void handleTextInput(sf::Uint32 unicode) {
+    void handleTextInput(Uint32 unicode) {
         if (unicode == 8 && !userInput.empty()) {
             userInput.pop_back();
         }
@@ -609,7 +612,7 @@ public:
     }
 
     void processEdgeInput() {
-        std::istringstream iss(userInput);
+        istringstream iss(userInput);
         int from, to;
         float cap;
         if (iss >> from >> to >> cap) {
@@ -621,14 +624,14 @@ public:
 
     void startMaxFlow() {
         totalFlow = 0;
-        std::vector<int> parent(nodes.size());
+        vector<int> parent(nodes.size());
         animating = true;
 
         while (bfs(0, nodes.size() - 1, parent)) {
             float pathFlow = 1e9f;
             for (int v = nodes.size() - 1; v != 0; v = parent[v]) {
                 int u = parent[v];
-                pathFlow = std::min(pathFlow, getResidualCapacity(u, v));
+                pathFlow = min(pathFlow, getResidualCapacity(u, v));
             }
 
             for (int v = nodes.size() - 1; v != 0; v = parent[v]) {
@@ -641,21 +644,21 @@ public:
             currentPath.clear();
             for (int v = nodes.size() - 1; v != -1; v = parent[v])
                 currentPath.push_back(v);
-            std::reverse(currentPath.begin(), currentPath.end());
+            reverse(currentPath.begin(), currentPath.end());
 
             walker.setPosition(nodes[currentPath[0]].position);
             animationIndex = 0;
 
             animateWalkerAlongPath();
 
-            std::stringstream ss;
+            stringstream ss;
             ss << "Max Flow so far: " << totalFlow;
             maxFlowText.setString(ss.str());
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            this_thread::sleep_for(chrono::milliseconds(500));
         }
 
-        std::stringstream ss;
+        stringstream ss;
         ss << "Final Max Flow: " << totalFlow;
         maxFlowText.setString(ss.str());
 
@@ -666,11 +669,11 @@ public:
         if (currentPath.size() < 2) return;
 
         for (size_t i = 0; i < currentPath.size() - 1; ++i) {
-            sf::Vector2f start = nodes[currentPath[i]].position;
-            sf::Vector2f end = nodes[currentPath[i + 1]].position;
+            Vector2f start = nodes[currentPath[i]].position;
+            Vector2f end = nodes[currentPath[i + 1]].position;
 
-            sf::Vector2f dir = end - start;
-            float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+            Vector2f dir = end - start;
+            float length = sqrt(dir.x * dir.x + dir.y * dir.y);
             dir /= length;
 
             float moved = 0.f;
@@ -685,7 +688,7 @@ public:
                 draw(*renderWindow);
                 renderWindow->display();
 
-                sf::sleep(sf::milliseconds(10));
+                sleep(milliseconds(10));
             }
 
             walker.setPosition(end);
@@ -695,13 +698,13 @@ public:
                 renderWindow->display();
             }
 
-            sf::sleep(sf::milliseconds(200));  // Pause at node
+            sleep(milliseconds(200));  // Pause at node
         }
     }
 
-    bool bfs(int src, int sink, std::vector<int>& parent) {
-        std::vector<bool> visited(nodes.size(), false);
-        std::queue<int> q;
+    bool bfs(int src, int sink, vector<int>& parent) {
+        vector<bool> visited(nodes.size(), false);
+        queue<int> q;
         q.push(src);
         visited[src] = true;
         parent[src] = -1;
@@ -737,11 +740,11 @@ public:
         }
     }
 
-    bool isRestartButtonClicked(sf::Vector2f pos) {
+    bool isRestartButtonClicked(Vector2f pos) {
         return restartButton.getGlobalBounds().contains(pos);
     }
 
-    void draw(sf::RenderWindow& window) {
+    void draw(RenderWindow& window) {
         window.draw(instructionText);
         window.draw(button);
         window.draw(buttonText);
@@ -757,21 +760,21 @@ public:
 
         for (auto& edge : edges) {
             if (edge.capacity == 0) continue;
-            sf::Vertex line[] = {
-                sf::Vertex(nodes[edge.from].position, sf::Color::White),
-                sf::Vertex(nodes[edge.to].position, sf::Color::White)
+            Vertex line[] = {
+                Vertex(nodes[edge.from].position, Color::White),
+                Vertex(nodes[edge.to].position, Color::White)
             };
-            window.draw(line, 2, sf::Lines);
+            window.draw(line, 2, Lines);
 
             // Draw flow/capacity
-            sf::Text flowText;
+            Text flowText;
             flowText.setFont(font);
             flowText.setCharacterSize(14);
-            flowText.setFillColor(sf::Color::Yellow);
-            sf::Vector2f mid = (nodes[edge.from].position + nodes[edge.to].position) / 2.f;
+            flowText.setFillColor(Color::Yellow);
+            Vector2f mid = (nodes[edge.from].position + nodes[edge.to].position) / 2.f;
             flowText.setPosition(mid);
-            flowText.setString(std::to_string(static_cast<int>(edge.flow)) + "/" +
-                std::to_string(static_cast<int>(edge.capacity)));
+            flowText.setString(to_string(static_cast<int>(edge.flow)) + "/" +
+                to_string(static_cast<int>(edge.capacity)));
             window.draw(flowText);
         }
 
@@ -791,9 +794,21 @@ public:
 class PrimsVisualizer {
 private:
     struct Node {
-        sf::Vector2f position;
-        sf::CircleShape shape;
-        sf::Text label;
+        Vector2f position;
+        CircleShape shape;
+        Text label;
+        float originalRadius = 10.f;
+        float pulseRadius = 10.f;
+        bool isPulsing = false;
+        Clock pulseClock;
+    };
+
+    struct Edge {
+        int from;
+        int to;
+        float weight;
+        bool isHighlighted = false;
+        Color color = Color::White;
     };
 
     struct AnimationStep {
@@ -804,91 +819,98 @@ private:
         bool isNodeSelection; // true for node selection, false for edge addition
     };
 
-    std::vector<Node> nodes;
-    std::vector<Edge> edges;  // Using the Edge struct already defined in the code
-    std::vector<sf::Text> edgeLabels;
-    std::vector<sf::Vertex> mstLines;
+    vector<Node> nodes;
+    vector<Edge> edges;
+    vector<Text> edgeLabels;
+    vector<Vertex> mstLines;
 
-    sf::Font font;
-    sf::Text buttonText, mstWeightText, instructionText, inputPrompt, inputText, statusText;
-    sf::RectangleShape button;
-    sf::RectangleShape exitButton;
-    sf::Text exitButtonText;
-    sf::RectangleShape restartButton;
-    sf::Text restartButtonText;
+    Font font;
+    Text buttonText, mstWeightText, instructionText, inputPrompt, inputText, statusText;
+    RectangleShape button;
+    RectangleShape exitButton;
+    Text exitButtonText;
+    RectangleShape restartButton;
+    Text restartButtonText;
+    RectangleShape speedUpButton;
+    RectangleShape speedDownButton;
+    Text speedUpText;
+    Text speedDownText;
+    Text speedText;
 
-    std::string userInput;
+    string userInput;
     float totalMSTWeight = 0.0f;
     bool showMST = false;
 
     // Animation-related members
-    std::vector<AnimationStep> animationSteps;
+    vector<AnimationStep> animationSteps;
     size_t currentAnimationStep = 0;
-    sf::Clock animationClock;
+    Clock animationClock;
     bool isAnimating = false;
     float animationSpeed = 2.0f; // seconds per step
-    std::vector<int> nodesInMST;
-    std::vector<sf::Vertex> animatedMSTLines;
+    vector<int> nodesInMST;
+    vector<Vertex> animatedMSTLines;
+    int currentHighlightedEdge = -1;
+    int currentConsideredNode = -1;
 
 public:
     PrimsVisualizer() {
         font.loadFromFile("arial.ttf");
 
-        button.setSize(sf::Vector2f(200, 35));
-        button.setFillColor(sf::Color(0,100,0));
+        button.setSize(Vector2f(200, 35));
+        button.setFillColor(Color(0, 100, 0));
         button.setPosition(830, 20);
 
         buttonText.setFont(font);
         buttonText.setString("Run Prim's Algorithm");
         buttonText.setCharacterSize(17);
-        buttonText.setFillColor(sf::Color::White);
+        buttonText.setFillColor(Color::White);
         buttonText.setPosition(840, 28);
 
         instructionText.setFont(font);
         instructionText.setCharacterSize(20);
-        instructionText.setFillColor(sf::Color::Yellow);
+        instructionText.setFillColor(Color::Yellow);
         instructionText.setPosition(20, 10);
         instructionText.setString("Click to add nodes. Type edges like: 0 1 10 and press Enter.");
 
         inputPrompt.setFont(font);
         inputPrompt.setCharacterSize(20);
-        inputPrompt.setFillColor(sf::Color::Yellow);
+        inputPrompt.setFillColor(Color::Yellow);
         inputPrompt.setPosition(20, 520);
         inputPrompt.setString("Edge Input (format: from to weight):");
 
         inputText.setFont(font);
         inputText.setCharacterSize(20);
-        inputText.setFillColor(sf::Color::White);
+        inputText.setFillColor(Color::White);
         inputText.setPosition(350, 520);
 
         mstWeightText.setFont(font);
         mstWeightText.setCharacterSize(18);
-        mstWeightText.setFillColor(sf::Color::Red);
+        mstWeightText.setFillColor(Color::Red);
         mstWeightText.setPosition(20, 550);
 
         statusText.setFont(font);
         statusText.setCharacterSize(18);
-        statusText.setFillColor(sf::Color::Yellow);
+        statusText.setFillColor(Color::Yellow);
         statusText.setPosition(20, 480);
         statusText.setString("");
 
         exitButton.setSize({ 100, 35 });
-        exitButton.setFillColor(sf::Color::Red);
+        exitButton.setFillColor(Color::Red);
         exitButton.setPosition(1050, 20);
 
         exitButtonText.setFont(font);
         exitButtonText.setCharacterSize(18);
-        exitButtonText.setFillColor(sf::Color::White);
+        exitButtonText.setFillColor(Color::White);
         exitButtonText.setString("Exit");
         exitButtonText.setPosition(1060, 25);
 
         restartButton.setSize({ 100, 35 });
-        restartButton.setFillColor(sf::Color::Blue);
+        restartButton.setFillColor(Color::Blue);
         restartButton.setPosition(700, 20);
 
         restartButtonText.setFont(font);
         restartButtonText.setCharacterSize(18);
-        restartButtonText.setFillColor(sf::Color::White);
+        restartButtonText.setFillColor(Color::White);
         restartButtonText.setString("Restart");
         restartButtonText.setPosition(730, 25);
     }
@@ -908,6 +930,8 @@ public:
         inputText.setString("");
         mstWeightText.setString("");
         statusText.setString("");
+        currentHighlightedEdge = -1;
+        currentConsideredNode = -1;
     }
 
     void addNode(float x, float y) {
@@ -915,39 +939,76 @@ public:
         Node node;
         node.position = { x, y };
         node.shape.setRadius(10.f);
-        node.shape.setFillColor(sf::Color::Blue);
+        node.shape.setFillColor(Color::Blue);
         node.shape.setPosition(x - 10.f, y - 10.f);
+        node.shape.setOutlineThickness(1.f);
+        node.shape.setOutlineColor(Color::White);
 
         node.label.setFont(font);
-        node.label.setString(std::to_string(id));
+        node.label.setString(to_string(id));
         node.label.setCharacterSize(14);
-        node.label.setFillColor(sf::Color::White);
-        node.label.setPosition(x - 5.f, y - 25.f);
+        node.label.setFillColor(Color::White);
+
+        // Center the label properly
+        FloatRect textBounds = node.label.getLocalBounds();
+        node.label.setPosition(
+            x - textBounds.width / 2,
+            y - textBounds.height / 2 - 5.f
+        );
 
         nodes.push_back(node);
     }
 
     void addEdge(int from, int to, float weight) {
-        if (from >= 0 && to >= 0 && from < nodes.size() && to < nodes.size()) {
+        if (from >= 0 && to >= 0 && from < nodes.size() && to < nodes.size() && from != to) {
+            // Check if edge already exists
+            for (size_t i = 0; i < edges.size(); i++) {
+                if ((edges[i].from == from && edges[i].to == to) ||
+                    (edges[i].from == to && edges[i].to == from)) {
+                    statusText.setString("Edge already exists!");
+                    return;
+                }
+            }
+
+            // Add both directions for undirected graph
             edges.push_back({ from, to, weight });
             edges.push_back({ to, from, weight });
 
-            sf::Text label;
+            // Create edge label
+            Text label;
             label.setFont(font);
-            label.setString(std::to_string(static_cast<int>(weight)));
+            label.setString(to_string(static_cast<int>(weight)));
             label.setCharacterSize(14);
-            label.setFillColor(sf::Color::Red);
+            label.setFillColor(Color::Yellow);
 
-            // Position label midway between nodes
-            sf::Vector2f midpoint = (nodes[from].position + nodes[to].position) / 2.f;
-            label.setPosition(midpoint);
+            // Position label midway between nodes with slight offset
+            Vector2f midpoint = (nodes[from].position + nodes[to].position) / 2.f;
+            // Add slight offset to make sure label doesn't overlap with edge
+            Vector2f offset = nodes[to].position - nodes[from].position;
+            float length = sqrt(offset.x * offset.x + offset.y * offset.y);
+            if (length > 0) {
+                offset = Vector2f(-offset.y, offset.x) * 8.f / length;
+                midpoint += offset;
+            }
+
+            // Center the text at the midpoint
+            FloatRect textBounds = label.getLocalBounds();
+            label.setPosition(
+                midpoint.x - textBounds.width / 2,
+                midpoint.y - textBounds.height / 2
+            );
 
             edgeLabels.push_back(label);
-            edgeLabels.push_back(label);  // Duplicate for both directions
+
+            statusText.setString("Added edge " + to_string(from) + " to " +
+                to_string(to) + " with weight " + to_string(static_cast<int>(weight)));
+        }
+        else {
+            statusText.setString("Invalid edge: Check node indices or self-loops not allowed");
         }
     }
 
-    void handleClick(sf::Vector2f pos) {
+    void handleClick(Vector2f pos) {
         if (isAnimating) {
             // Skip to next animation step if clicked during animation
             nextAnimationStep();
@@ -963,12 +1024,59 @@ public:
         else if (restartButton.getGlobalBounds().contains(pos)) {
             // Will be handled in main
         }
+        else if (speedUpButton.getGlobalBounds().contains(pos)) {
+            if (animationSpeed > 0.5f) {
+                animationSpeed -= 0.5f;
+                speedText.setString("Speed: x" + to_string(static_cast<int>(2.0f / animationSpeed)));
+            }
+        }
+        else if (speedDownButton.getGlobalBounds().contains(pos)) {
+            if (animationSpeed < 4.0f) {
+                animationSpeed += 0.5f;
+                speedText.setString("Speed: x" + to_string(static_cast<int>(2.0f / animationSpeed)));
+            }
+        }
         else {
-            addNode(pos.x, pos.y);
+            // Check if we're clicking on a node (select for edge creation)
+            bool nodeClicked = false;
+            for (size_t i = 0; i < nodes.size(); i++) {
+                if (nodes[i].shape.getGlobalBounds().contains(pos)) {
+                    // Handle node selection for edge creation
+                    if (currentConsideredNode == -1) {
+                        currentConsideredNode = i;
+                        nodes[i].shape.setFillColor(Color::Yellow);
+                        statusText.setString("Node " + to_string(i) + " selected. Click another node to create edge.");
+                    }
+                    else if (currentConsideredNode != static_cast<int>(i)) {
+                        // Ask user for edge weight
+                        userInput = to_string(currentConsideredNode) + " " + to_string(i) + " ";
+                        inputText.setString(userInput);
+                        statusText.setString("Enter weight for edge " + to_string(currentConsideredNode) +
+                            " to " + to_string(i));
+
+                        // Reset node colors
+                        nodes[currentConsideredNode].shape.setFillColor(Color::Blue);
+                        currentConsideredNode = -1;
+                    }
+                    nodeClicked = true;
+                    break;
+                }
+            }
+
+            // If no node was clicked, add a new node
+            if (!nodeClicked && currentConsideredNode == -1) {
+                addNode(pos.x, pos.y);
+            }
+            // If no node was clicked but one was selected, deselect it
+            else if (!nodeClicked && currentConsideredNode != -1) {
+                nodes[currentConsideredNode].shape.setFillColor(Color::Blue);
+                currentConsideredNode = -1;
+                statusText.setString("Node selection canceled");
+            }
         }
     }
 
-    void handleTextInput(sf::Uint32 unicode) {
+    void handleTextInput(Uint32 unicode) {
         if (isAnimating) return; // Ignore input during animation
 
         if (unicode == 8 && !userInput.empty()) { // Backspace
@@ -984,11 +1092,14 @@ public:
     }
 
     void processEdgeInput() {
-        std::istringstream iss(userInput);
+        istringstream iss(userInput);
         int from, to;
         float weight;
         if (iss >> from >> to >> weight) {
             addEdge(from, to, weight);
+        }
+        else {
+            statusText.setString("Invalid input format. Use: from to weight");
         }
         userInput.clear();
         inputText.setString("");
@@ -996,7 +1107,45 @@ public:
 
     void runPrimsAlgorithm() {
         int n = nodes.size();
-        if (n == 0) return;
+        if (n == 0) {
+            statusText.setString("Add nodes first before running the algorithm");
+            return;
+        }
+        if (n == 1) {
+            statusText.setString("Add more nodes to form a graph");
+            return;
+        }
+
+        // Check if graph is connected
+        vector<vector<int>> adjacencyList(n);
+        for (size_t i = 0; i < edges.size(); i += 2) {
+            adjacencyList[edges[i].from].push_back(edges[i].to);
+        }
+
+        vector<bool> visited(n, false);
+        function<void(int)> dfs = [&](int node) {
+            visited[node] = true;
+            for (int neighbor : adjacencyList[node]) {
+                if (!visited[neighbor]) {
+                    dfs(neighbor);
+                }
+            }
+            };
+
+        dfs(0);
+
+        bool isConnected = true;
+        for (bool v : visited) {
+            if (!v) {
+                isConnected = false;
+                break;
+            }
+        }
+
+        if (!isConnected) {
+            statusText.setString("Graph is not connected! Add more edges.");
+            return;
+        }
 
         // Reset previous animation state
         animationSteps.clear();
@@ -1005,13 +1154,18 @@ public:
         currentAnimationStep = 0;
         totalMSTWeight = 0.0f;
 
-        std::vector<bool> inMST(n, false);
-        std::vector<float> key(n, std::numeric_limits<float>::max());
-        std::vector<int> parent(n, -1);
+        // Reset node colors
+        for (auto& node : nodes) {
+            node.shape.setFillColor(Color::Blue);
+        }
+
+        vector<bool> inMST(n, false);
+        vector<float> key(n, numeric_limits<float>::max());
+        vector<int> parent(n, -1);
         key[0] = 0;
 
-        using P = std::pair<float, int>;
-        std::priority_queue<P, std::vector<P>, std::greater<P>> pq;
+        using P = pair<float, int>;
+        priority_queue<P, vector<P>, greater<P>> pq;
         pq.push({ 0, 0 });
 
         // First node is always in MST
@@ -1029,17 +1183,17 @@ public:
                 animationSteps.push_back({ u, u, parent[u], key[u], true });
             }
 
-            for (const auto& edge : edges) {
-                if (edge.from == u) {
-                    int v = edge.to;
-                    float w = edge.weight;
+            // Find all edges from u
+            for (size_t i = 0; i < edges.size(); i++) {
+                if (edges[i].from == u) {
+                    int v = edges[i].to;
+                    float w = edges[i].weight;
                     if (!inMST[v] && w < key[v]) {
                         key[v] = w;
                         parent[v] = u;
                         pq.push({ key[v], v });
 
                         // Add edge consideration to animation steps
-                        // This represents considering this edge as a candidate
                         animationSteps.push_back({ u, v, u, w, false });
                     }
                 }
@@ -1054,7 +1208,9 @@ public:
 
         // Color the starting node
         if (!nodes.empty()) {
-            nodes[0].shape.setFillColor(sf::Color::Green);
+            nodes[0].shape.setFillColor(Color::Green);
+            nodes[0].isPulsing = true;
+            nodes[0].pulseClock.restart();
         }
     }
 
@@ -1067,35 +1223,65 @@ public:
 
         AnimationStep& step = animationSteps[currentAnimationStep];
 
+        // Reset highlighting from previous step
+        if (currentHighlightedEdge != -1) {
+            for (size_t i = 0; i < edges.size(); i++) {
+                edges[i].isHighlighted = false;
+                edges[i].color = Color::White;
+            }
+        }
+
         if (step.isNodeSelection) {
             // Adding a node to MST
             if (step.addedNode < nodes.size()) {
-                nodes[step.addedNode].shape.setFillColor(sf::Color::Green);
+                nodes[step.addedNode].shape.setFillColor(Color::Green);
+                nodes[step.addedNode].isPulsing = true;
+                nodes[step.addedNode].pulseClock.restart();
 
                 // Add to MST nodes list
                 nodesInMST.push_back(step.addedNode);
 
                 // Add edge to MST if this isn't the first node
                 if (step.fromNode != -1) {
-                    sf::Vertex line[] = {
-                        sf::Vertex(nodes[step.fromNode].position, sf::Color::Cyan),
-                        sf::Vertex(nodes[step.addedNode].position, sf::Color::Cyan)
+                    Vertex line[] = {
+                        Vertex(nodes[step.fromNode].position, Color::Cyan),
+                        Vertex(nodes[step.addedNode].position, Color::Cyan)
                     };
                     animatedMSTLines.push_back(line[0]);
                     animatedMSTLines.push_back(line[1]);
 
                     totalMSTWeight += step.weight;
-                    mstWeightText.setString("MST Weight: " + std::to_string(static_cast<int>(totalMSTWeight)));
+                    mstWeightText.setString("MST Weight: " + to_string(static_cast<int>(totalMSTWeight)));
+
+                    // Highlight the edge in the original edge list
+                    for (size_t i = 0; i < edges.size(); i++) {
+                        if ((edges[i].from == step.fromNode && edges[i].to == step.addedNode) ||
+                            (edges[i].from == step.addedNode && edges[i].to == step.fromNode)) {
+                            edges[i].isHighlighted = true;
+                            edges[i].color = Color::Cyan;
+                        }
+                    }
                 }
 
-                statusText.setString("Added node " + std::to_string(step.addedNode) + " to MST");
+                statusText.setString("Added node " + to_string(step.addedNode) + " to MST" +
+                    (step.fromNode != -1 ? " via edge from " + to_string(step.fromNode) : ""));
             }
         }
         else {
             // Considering an edge
-            statusText.setString("Considering edge from " + std::to_string(step.fromNode) +
-                " to " + std::to_string(step.addedNode) +
-                " with weight " + std::to_string(static_cast<int>(step.weight)));
+            currentHighlightedEdge = -1;
+            for (size_t i = 0; i < edges.size(); i++) {
+                if ((edges[i].from == step.fromNode && edges[i].to == step.addedNode) ||
+                    (edges[i].from == step.addedNode && edges[i].to == step.fromNode)) {
+                    edges[i].isHighlighted = true;
+                    edges[i].color = Color::Yellow; // Highlight in yellow for consideration
+                    currentHighlightedEdge = i;
+                }
+            }
+
+            statusText.setString("Considering edge from " + to_string(step.fromNode) +
+                " to " + to_string(step.addedNode) +
+                " with weight " + to_string(static_cast<int>(step.weight)));
         }
 
         currentAnimationStep++;
@@ -1109,20 +1295,45 @@ public:
 
         // Final status
         statusText.setString("Prim's algorithm complete - MST weight: " +
-            std::to_string(static_cast<int>(totalMSTWeight)));
+            to_string(static_cast<int>(totalMSTWeight)));
+
+        // Stop all node pulsing
+        for (auto& node : nodes) {
+            node.isPulsing = false;
+            node.shape.setRadius(node.originalRadius);
+        }
     }
 
     void update() {
         if (isAnimating && animationClock.getElapsedTime().asSeconds() > animationSpeed) {
             nextAnimationStep();
         }
+
+        // Update pulsing nodes
+        for (auto& node : nodes) {
+            if (node.isPulsing) {
+                float elapsed = node.pulseClock.getElapsedTime().asSeconds();
+                float pulseAmount = 3.0f * sin(elapsed * 5.0f);
+                node.pulseRadius = node.originalRadius + pulseAmount;
+                node.shape.setRadius(node.pulseRadius);
+                node.shape.setPosition(
+                    node.position.x - node.pulseRadius,
+                    node.position.y - node.pulseRadius
+                );
+
+                // Reset if pulse gets too large
+                if (elapsed > 10.0f) {
+                    node.pulseClock.restart();
+                }
+            }
+        }
     }
 
-    bool isExitButtonClicked(sf::Vector2f pos) {
+    bool isExitButtonClicked(Vector2f pos) {
         return exitButton.getGlobalBounds().contains(pos);
     }
 
-    bool isRestartButtonClicked(sf::Vector2f pos) {
+    bool isRestartButtonClicked(Vector2f pos) {
         return restartButton.getGlobalBounds().contains(pos);
     }
 
@@ -1130,7 +1341,7 @@ public:
         return isAnimating;
     }
 
-    void draw(sf::RenderWindow& window) {
+    void draw(RenderWindow& window) {
         window.draw(instructionText);
         window.draw(button);
         window.draw(buttonText);
@@ -1144,18 +1355,21 @@ public:
 
         // Draw edges
         for (size_t i = 0; i < edges.size(); i += 2) {
-            sf::Vertex line[] = {
-                sf::Vertex(nodes[edges[i].from].position, sf::Color::White),
-                sf::Vertex(nodes[edges[i].to].position, sf::Color::White)
+            Vertex line[] = {
+                Vertex(nodes[edges[i].from].position, edges[i].isHighlighted ? edges[i].color : Color::White),
+                Vertex(nodes[edges[i].to].position, edges[i].isHighlighted ? edges[i].color : Color::White)
             };
-            window.draw(line, 2, sf::Lines);
-            if (i / 2 < edgeLabels.size())
-                window.draw(edgeLabels[i / 2]);
+            window.draw(line, 2, Lines);
+        }
+
+        // Draw edge labels
+        for (size_t i = 0; i < edgeLabels.size(); i++) {
+            window.draw(edgeLabels[i]);
         }
 
         // Draw MST edges if algorithm has been run
         if (!animatedMSTLines.empty()) {
-            window.draw(&animatedMSTLines[0], animatedMSTLines.size(), sf::Lines);
+            window.draw(&animatedMSTLines[0], animatedMSTLines.size(), Lines);
             window.draw(mstWeightText);
         }
 
@@ -1168,45 +1382,45 @@ public:
 };
 
 int main() {
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    sf::RenderWindow window(desktop, "Algorithm Visualizer", sf::Style::Fullscreen);
+    VideoMode desktop = VideoMode::getDesktopMode();
+    RenderWindow window(desktop, "Algorithm Visualizer", Style::Fullscreen);
     window.setFramerateLimit(60);
 
     AppState currentState = MENU;
-    sf::Font font;
+    Font font;
     font.loadFromFile("arial.ttf");
 
-    sf::Texture bgTexture;
+    Texture bgTexture;
     bgTexture.loadFromFile("algo10.jpeg");
-    sf::Sprite background(bgTexture);
+    Sprite background(bgTexture);
 
     // Center background
-    sf::Vector2u bgSize = bgTexture.getSize();
-    sf::Vector2u winSize = window.getSize();
-    float scale = std::min((float)winSize.x / bgSize.x, (float)winSize.y / bgSize.y);
+    Vector2u bgSize = bgTexture.getSize();
+    Vector2u winSize = window.getSize();
+    float scale = min((float)winSize.x / bgSize.x, (float)winSize.y / bgSize.y);
     background.setScale(scale, scale);
-    sf::FloatRect bgBounds = background.getGlobalBounds();
+    FloatRect bgBounds = background.getGlobalBounds();
     background.setPosition((winSize.x - bgBounds.width) / 2.f, (winSize.y - bgBounds.height) / 2.f);
 
-    std::vector<std::string> labels = { "Dijkstra Algorithm", "Ford Fulkerson", "A*", "Prims MST Algorithm", "Exit" };
-    std::vector<sf::RectangleShape> buttons;
-    std::vector<sf::Text> texts;
+    vector<string> labels = { "Dijkstra Algorithm", "Ford Fulkerson", "A*", "Prims MST Algorithm", "Exit" };
+    vector<RectangleShape> buttons;
+    vector<Text> texts;
 
     const float buttonWidth = 300.f, buttonHeight = 50.f, spacing = 70.f;
     const float startY = (winSize.y - (labels.size() * spacing)) / 2;
 
     for (size_t i = 0; i < labels.size(); ++i) {
-        sf::RectangleShape button(sf::Vector2f(buttonWidth, buttonHeight));
-        button.setFillColor(sf::Color(50, 50, 50, 200));
+        RectangleShape button(Vector2f(buttonWidth, buttonHeight));
+        button.setFillColor(Color(50, 50, 50, 200));
         button.setOrigin(buttonWidth / 2, buttonHeight / 2);
         button.setPosition(winSize.x / 2.f, startY + i * spacing);
         buttons.push_back(button);
 
-        sf::Text text;
+        Text text;
         text.setFont(font);
         text.setString(labels[i]);
         text.setCharacterSize(20);
-        text.setFillColor(sf::Color::White);
+        text.setFillColor(Color::White);
         text.setOrigin(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2);
         text.setPosition(button.getPosition());
         texts.push_back(text);
@@ -1223,14 +1437,14 @@ int main() {
     fordFulkersonVisualizer.setRenderWindow(window);
 
     while (window.isOpen()) {
-        sf::Event event;
-        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        Event event;
+        Vector2f mousePos = window.mapPixelToCoords(Mouse::getPosition(window));
 
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == Event::Closed)
                 window.close();
 
-            if (currentState == MENU && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+            if (currentState == MENU && event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 for (size_t i = 0; i < buttons.size(); ++i) {
                     if (buttons[i].getGlobalBounds().contains(mousePos)) {
                         if (labels[i] == "Exit")
@@ -1241,7 +1455,7 @@ int main() {
                 }
             }
             else if (currentState == VIEW1) {
-                if (event.type == sf::Event::TextEntered) {
+                if (event.type == Event::TextEntered) {
                     if (event.text.unicode == '\r') {
                         dijkstraGraph.addEdgeFromText(dijkstraInput.content);
                         dijkstraInput.clear();
@@ -1250,7 +1464,7 @@ int main() {
                         dijkstraInput.addChar(static_cast<char>(event.text.unicode));
                     }
                 }
-                if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.type == Event::MouseButtonPressed) {
                     if (dijkstraGraph.isExitButtonClicked(mousePos)) {
                         currentState = MENU;
                     }
@@ -1264,7 +1478,7 @@ int main() {
             }
             else if (currentState == VIEW2) { // Ford-Fulkerson
                 if (!fordFulkersonVisualizer.isAnimating()) {
-                    if (event.type == sf::Event::TextEntered) {
+                    if (event.type == Event::TextEntered) {
                         if (event.text.unicode == '\r') {
                             fordFulkersonVisualizer.processEdgeInput();
                         }
@@ -1272,7 +1486,7 @@ int main() {
                             fordFulkersonVisualizer.handleTextInput(event.text.unicode);
                         }
                     }
-                    if (event.type == sf::Event::MouseButtonPressed) {
+                    if (event.type == Event::MouseButtonPressed) {
                         if (fordFulkersonVisualizer.isExitButtonClicked(mousePos)) {
                             currentState = MENU;
                         }
@@ -1286,7 +1500,7 @@ int main() {
                 }
             }
             else if (currentState == VIEW3) { // A* Algorithm Visualizer
-                if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.type == Event::MouseButtonPressed) {
                     if (astarVisualizer.isRestartButtonClicked(mousePos)) {
                         astarVisualizer.reset();
                     }
@@ -1295,16 +1509,16 @@ int main() {
                     }
                 }
 
-                if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+                if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space)
                     astarVisualizer.runAStar();
             }
             // Added handling for VIEW4 - Prim's MST Algorithm
             else if (currentState == VIEW4) {
-                if (event.type == sf::Event::TextEntered) {
+                if (event.type == Event::TextEntered) {
                     primsVisualizer.handleTextInput(event.text.unicode);
                 }
 
-                if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.type == Event::MouseButtonPressed) {
                     if (primsVisualizer.isExitButtonClicked(mousePos)) {
                         currentState = MENU;
                     }
@@ -1317,7 +1531,7 @@ int main() {
                 }
             }
 
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
                 currentState = MENU;
         }
 
@@ -1331,7 +1545,7 @@ int main() {
         }
 
         // Drawing logic
-        window.clear(sf::Color(30, 30, 30));
+        window.clear(Color(30, 30, 30));
 
         if (currentState == MENU) {
             window.draw(background);
