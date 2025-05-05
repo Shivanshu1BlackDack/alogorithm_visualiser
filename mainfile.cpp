@@ -123,7 +123,7 @@ public:
         walker.setOrigin(8.f, 8.f);
         //new code added
         restartButton.setSize({ 150, 35 });
-        restartButton.setFillColor(Color(0, 150, 0));
+        restartButton.setFillColor(Color::Blue);
         restartButton.setPosition(470, 20);
 
         restartButtonText.setFont(font);
@@ -307,6 +307,8 @@ private:
     //new member variable for reset buuton
     RectangleShape restartButton;
     Text restartButtonText;
+    RectangleShape exitbutton;
+    Text exitbuttonText;
     Font font;
 public:
     AStarVisualizer() {
@@ -325,6 +327,16 @@ public:
         restartButtonText.setFillColor(Color::White);
         restartButtonText.setString("Restart");
         restartButtonText.setPosition(730, 25);
+
+        exitbutton.setSize({ 150, 35 });
+        exitbutton.setFillColor(Color::Red);
+        exitbutton.setPosition(1025, 20);
+
+        exitbuttonText.setFont(font);
+        exitbuttonText.setCharacterSize(18);
+        exitbuttonText.setFillColor(Color::White);
+        exitbuttonText.setString("Exit");
+        exitbuttonText.setPosition(1040, 25);
     }
 
     void reset() {
@@ -341,6 +353,10 @@ public:
 
     bool isRestartButtonClicked(Vector2f pos) {
         return restartButton.getGlobalBounds().contains(pos);
+    }
+
+    bool isExitButtonClicked(Vector2f pos) {
+        return exitbutton.getGlobalBounds().contains(pos);
     }
 
     void draw(RenderWindow& window) {
@@ -362,7 +378,10 @@ public:
         }
         window.draw(restartButton);
         window.draw(restartButtonText);
+        window.draw(exitbutton);
+        window.draw(exitbuttonText);
     }
+
 
     void handleClick(Vector2f pos) {
         int row = pos.y / cellSize;
@@ -831,12 +850,6 @@ private:
     Text exitButtonText;
     RectangleShape restartButton;
     Text restartButtonText;
-    RectangleShape speedUpButton;
-    RectangleShape speedDownButton;
-    Text speedUpText;
-    Text speedDownText;
-    Text speedText;
-
     string userInput;
     float totalMSTWeight = 0.0f;
     bool showMST = false;
@@ -1023,18 +1036,6 @@ public:
         }
         else if (restartButton.getGlobalBounds().contains(pos)) {
             // Will be handled in main
-        }
-        else if (speedUpButton.getGlobalBounds().contains(pos)) {
-            if (animationSpeed > 0.5f) {
-                animationSpeed -= 0.5f;
-                speedText.setString("Speed: x" + to_string(static_cast<int>(2.0f / animationSpeed)));
-            }
-        }
-        else if (speedDownButton.getGlobalBounds().contains(pos)) {
-            if (animationSpeed < 4.0f) {
-                animationSpeed += 0.5f;
-                speedText.setString("Speed: x" + to_string(static_cast<int>(2.0f / animationSpeed)));
-            }
         }
         else {
             // Check if we're clicking on a node (select for edge creation)
@@ -1503,6 +1504,10 @@ int main() {
                 if (event.type == Event::MouseButtonPressed) {
                     if (astarVisualizer.isRestartButtonClicked(mousePos)) {
                         astarVisualizer.reset();
+                    }
+                    else if (astarVisualizer.isExitButtonClicked(mousePos))
+                    {
+                        currentState = MENU;
                     }
                     else {
                         astarVisualizer.handleClick(mousePos);
