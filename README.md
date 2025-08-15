@@ -39,6 +39,7 @@ The path with the **minimum total weight** is highlighted.
 <img width="600" height="400" alt="prims" src="https://github.com/user-attachments/assets/5d941000-fae5-4522-8ca6-bd643e6376f8" />
 
 **Output**
+
 <img width="600" height="400" alt="op1" src="https://github.com/user-attachments/assets/03751cd6-cb0f-494b-9221-002e7b763de8" />
 
 ---
