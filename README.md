@@ -14,7 +14,7 @@ User-Friendly Controls: Simple on-screen instructions, along with restart and ex
 Cross-Platform: Built with SFML, making it compatible with Windows, macOS, and Linux.
 
 #MENU 
-<img width="1262" height="903" alt="menu" src="https://github.com/user-attachments/assets/378286ba-aca0-459a-bf6b-d1ebbdec35b7" />
+<img width="800" height="600" alt="menu" src="https://github.com/user-attachments/assets/378286ba-aca0-459a-bf6b-d1ebbdec35b7" />
 
 
 🧠 Algorithms Visualized
