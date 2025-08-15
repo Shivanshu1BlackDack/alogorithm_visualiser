@@ -33,7 +33,9 @@ The path with the **minimum total weight** is highlighted.
 4. **Animate** – Yellow walker follows the shortest path.
 
 **Example:**
+
 **Adding Node**
+
 <img width="600" height="400" alt="prims" src="https://github.com/user-attachments/assets/5d941000-fae5-4522-8ca6-bd643e6376f8" />
 
 **Output**
@@ -83,10 +85,14 @@ Builds an **MST** connecting all vertices with the smallest possible total edge 
    - Cyan = edges added to MST
 
 **Example:**
+
 **Adding a node**
+
 <img width="600" height="400" alt="mst1" src="https://github.com/user-attachments/assets/54cefabd-050c-48c3-88f6-ec54458874f9" />
 
+
 **Result**
+
 <img width="600" height="400" alt="inprocess mstprims" src="https://github.com/user-attachments/assets/e49682c4-3caa-46e1-a5b7-e119aa600608" />
 
 ---
