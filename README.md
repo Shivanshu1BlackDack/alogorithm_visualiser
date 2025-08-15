@@ -34,10 +34,10 @@ The path with the **minimum total weight** is highlighted.
 
 **Example:**
 **Adding Node**
-<img width="1392" height="927" alt="prims" src="https://github.com/user-attachments/assets/5d941000-fae5-4522-8ca6-bd643e6376f8" />
+<img width="600" height="400" alt="prims" src="https://github.com/user-attachments/assets/5d941000-fae5-4522-8ca6-bd643e6376f8" />
 
 **Output**
-<img width="1181" height="741" alt="op1" src="https://github.com/user-attachments/assets/03751cd6-cb0f-494b-9221-002e7b763de8" />
+<img width="600" height="400" alt="op1" src="https://github.com/user-attachments/assets/03751cd6-cb0f-494b-9221-002e7b763de8" />
 
 ---
 
@@ -52,7 +52,7 @@ A popular **pathfinding** algorithm that uses a **heuristic** for efficient sear
    - Blue = visited cells  
    - Yellow = final path
 
-<img width="1256" height="832" alt="astar" src="https://github.com/user-attachments/assets/80d323fe-155d-4762-837f-eb4e665c2613" />
+<img width="600" height="400" alt="astar" src="https://github.com/user-attachments/assets/80d323fe-155d-4762-837f-eb4e665c2613" />
 
 ---
 
@@ -65,7 +65,7 @@ Finds **maximum flow** from a source node to a sink node in a **flow network**.
 3. **Find Max Flow** – Click **Find Max Flow**.
 4. **Animate** – Cyan walker shows augmenting paths, with real-time flow updates.
 
-<img width="1545" height="882" alt="fordfulkerson" src="https://github.com/user-attachments/assets/888362d7-8afc-4a05-b139-ce5449378556" />
+<img width="600" height="400" alt="fordfulkerson" src="https://github.com/user-attachments/assets/888362d7-8afc-4a05-b139-ce5449378556" />
 
 ---
 
@@ -84,10 +84,10 @@ Builds an **MST** connecting all vertices with the smallest possible total edge 
 
 **Example:**
 **Adding a node**
-<img width="1512" height="797" alt="mst1" src="https://github.com/user-attachments/assets/54cefabd-050c-48c3-88f6-ec54458874f9" />
+<img width="600" height="400" alt="mst1" src="https://github.com/user-attachments/assets/54cefabd-050c-48c3-88f6-ec54458874f9" />
 
 **Result**
-<img width="1511" height="816" alt="inprocess mstprims" src="https://github.com/user-attachments/assets/e49682c4-3caa-46e1-a5b7-e119aa600608" />
+<img width="600" height="400" alt="inprocess mstprims" src="https://github.com/user-attachments/assets/e49682c4-3caa-46e1-a5b7-e119aa600608" />
 
 ---
 
