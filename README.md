@@ -16,7 +16,7 @@ This tool provides a **hands-on** way to understand how these algorithms operate
 ---
 
 ## 📜 Menu Preview
-<img width="400" height="250" alt="menu" src="https://github.com/user-attachments/assets/378286ba-aca0-459a-bf6b-d1ebbdec35b7" />
+<img width="600" height="400" alt="menu" src="https://github.com/user-attachments/assets/378286ba-aca0-459a-bf6b-d1ebbdec35b7" />
 
 ---
 
